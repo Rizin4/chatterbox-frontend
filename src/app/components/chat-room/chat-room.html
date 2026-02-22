@@ -1,0 +1,59 @@
+<div class="chat-container">
+
+  <!-- Header -->
+  <div class="chat-header">
+    <div class="room-info">
+      <button mat-icon-button (click)="leaveRoom()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2># {{ roomId }}</h2>
+    </div>
+    <div class="connection-status" [class.connected]="connected">
+      {{ connected ? '🟢 Connected' : '🔴 Connecting...' }}
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div class="messages-container" #messageContainer>
+    <div *ngFor="let message of messages">
+
+      <!-- System Message (JOIN / LEAVE) -->
+      <div *ngIf="isSystemMessage(message)" class="system-message">
+        {{ message.content }}
+      </div>
+
+      <!-- Chat Message -->
+      <div *ngIf="!isSystemMessage(message)"
+           class="message-row"
+           [class.own-row]="isOwnMessage(message)">
+        <div class="message-bubble"
+             [class.own-bubble]="isOwnMessage(message)"
+             [class.other-bubble]="!isOwnMessage(message)">
+          <div class="sender-name" *ngIf="!isOwnMessage(message)">
+            {{ message.sender }}
+          </div>
+          <div class="message-content">{{ message.content }}</div>
+          <div class="message-time">{{ formatTime(message.timestamp || '') }}</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Input Area -->
+  <div class="input-area">
+    <mat-form-field appearance="outline" class="message-input">
+      <input matInput
+             [(ngModel)]="newMessage"
+             placeholder="Type a message..."
+             (keyup.enter)="sendMessage()"
+             [disabled]="false" />
+    </mat-form-field>
+    <button mat-fab color="primary"
+            (click)="sendMessage()"
+            [disabled]="!newMessage.trim()">
+      <mat-icon>send</mat-icon>
+    </button>
+  </div>
+
+</div>
