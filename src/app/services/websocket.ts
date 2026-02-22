@@ -14,7 +14,7 @@ export class WebsocketService {
 
   connect(roomId: string, onConnected: () => void): void {
     this.client = new Client({
-      brokerURL: 'ws://localhost:8080/ws',
+      brokerURL: 'wss://chatterbox-backend-keal.onrender.com/ws',
       reconnectDelay: 5000,
       onConnect: () => {
         this.client.subscribe(`/topic/room/${roomId}`, (message: IMessage) => {

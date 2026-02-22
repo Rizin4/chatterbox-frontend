@@ -8,7 +8,7 @@ import { ChatRoom, ChatMessage } from '../models/message.model';
 })
 export class RoomService {
 
-  private apiUrl = 'http://localhost:8080/api/rooms';
+  private apiUrl = 'https://chatterbox-backend-keal.onrender.com/api/rooms';;
 
   constructor(private http: HttpClient) {}
 
