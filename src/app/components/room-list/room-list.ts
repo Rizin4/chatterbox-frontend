@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -24,7 +24,7 @@ export class RoomList implements OnInit {
   newRoomName: string = '';
   username: string = '';
 
-  constructor(private roomService: RoomService, private router: Router) {}
+  constructor(private roomService: RoomService, private router: Router, private ngZone: NgZone) {}
 
   ngOnInit(): void {
     this.username = localStorage.getItem('username') || '';
@@ -37,7 +37,9 @@ export class RoomList implements OnInit {
 
   loadRooms(): void {
     this.roomService.getAllRooms().subscribe(rooms => {
-      this.rooms = rooms;
+      this.ngZone.run(() => {
+       this.rooms = rooms;
+      });
     });
   }
 
@@ -51,8 +53,10 @@ export class RoomList implements OnInit {
 
     this.roomService.createRoom(room).subscribe({
       next: () => {
-        this.newRoomName = '';
-        this.loadRooms();
+        this.ngZone.run(() => {
+          this.newRoomName = '';
+          this.loadRooms();
+        });
       },
       error: () => alert('Room already exists!')
     });

@@ -48,8 +48,10 @@ export class ChatRoom implements OnInit, OnDestroy {
 
     // Load chat history first
     this.roomService.getMessages(this.roomId).subscribe(messages => {
-      this.messages = messages;
-      this.scrollToBottom();
+      this.ngZone.run(() => {
+        this.messages = messages;
+        this.scrollToBottom();
+      });
     });
 
     // Connect to WebSocket
